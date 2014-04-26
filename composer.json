@@ -1,11 +1,11 @@
 {
-    "name": "vendapi/vendapi",
+    "name": "offshoot/vendapi",
     "version": "1.2.0",
 
     "type": "library",
     "description": "Vend API class",
     "keywords": ["shopping","shop", "e-commerce"],
-    "homepage": "http://github.com/brucealdridge/vendapi",
+    "homepage": "https://github.com/TeamOffshoot/vendAPI",
     "license": "MIT",
 
     "authors": [
@@ -22,7 +22,8 @@
     ],
 
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "ext-curl": "*"
     },
 
     "autoload": {
