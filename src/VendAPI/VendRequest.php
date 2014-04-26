@@ -51,7 +51,7 @@ class VendRequest
      */
     protected $certificatePath;
 
-    public function __construct($url, $username, $password, $options = array()
+    public function __construct($url, $username, $password, $options = array())
     {
 
         $this->curl = curl_init();
