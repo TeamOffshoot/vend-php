@@ -26,12 +26,46 @@ class VendRequest
     private $http_header;
     private $http_body;
 
-    public function __construct($url, $username, $password)
+    /**
+     * set to false to stop cURL from verifying the peer's certificate
+     * @var boolean
+     */
+    protected $verifyPeer = true;
+
+    /**
+     * set to 1 to check the existence of a common name in the SSL peer
+     * certificate
+     * set to 2 to check the existence of a common name and also verify
+     * that it matches the hostname provided.
+     * In production environments the value of this option should
+     * be kept at 2 (default value).
+     * @var integer
+     */
+    protected $verifyHost = 2;
+
+    /**
+     * The name of a file holding one or more certificates to verify
+     * the peer with. This only makes sense when used in combination
+     * with CURLOPT_SSL_VERIFYPEER
+     * @var string
+     */
+    protected $certificatePath;
+
+    public function __construct($url, $username, $password, $options = array()
     {
+
         $this->curl = curl_init();
 
         // trim trailing slash for niceness
         $this->url = rtrim($url, '/');
+
+        if (array_key_exists('CURLOPT_SSL_VERIFYHOST', $options)) {
+            $this->verifyHost = $options['CURLOPT_SSL_VERIFYHOST'];
+        }
+
+        if (array_key_exists('CURLOPT_SSL_VERIFYPEER', $options)) {
+            $this->verifyPeer = $options['CURLOPT_SSL_VERIFYPEER'];
+        }
 
         // setup default curl options
         $options = array(
@@ -41,10 +75,27 @@ class VendRequest
             CURLOPT_HTTPAUTH => CURLAUTH_ANY,
             CURLOPT_USERPWD => $username.':'.$password,
             CURLOPT_HTTPHEADER,array('Accept: application/json','Content-Type: application/json'),
-            CURLOPT_HEADER => 1
+            CURLOPT_HEADER => 1,
+            CURLOPT_USERAGENT => 'brucealdridge/VendAPI',
+            CURLOPT_SSL_VERIFYHOST => $this->verifyHost
         );
 
         $this->setOpt($options);
+
+        if ($this->verifyPeer === false) {
+            $this->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+        } else {
+
+            // @see http://curl.haxx.se/docs/caextract.html
+
+            if (!file_exists($this->certificatePath)) {
+                throw new \RuntimeException('cacert.pem file not found');
+            }
+
+            $this->setOpt(CURLOPT_CAINFO, $this->certificatePath);
+
+        }
+
     }
     public function __destruct()
     {
