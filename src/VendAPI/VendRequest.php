@@ -1,7 +1,7 @@
 <?php
 
 /**
- * VendAPI 
+ * VendAPI
  *
  * An api for communicating with vend pos software - http://www.vendhq.com
  *
@@ -18,6 +18,7 @@ namespace VendAPI;
 
 class VendRequest
 {
+    private $url;
     private $curl;
     private $curl_debug;
     private $debug;
@@ -29,7 +30,8 @@ class VendRequest
     {
         $this->curl = curl_init();
 
-        $this->url = $url;
+        // trim trailing slash for niceness
+        $this->url = rtrim($url, '/');
 
         // setup default curl options
         $options = array(
@@ -51,6 +53,12 @@ class VendRequest
             curl_close($this->curl);
         }
     }
+
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
     /**
      * set option for request, also accepts an array of key/value pairs for the first param
      * @param string $name  option name to set

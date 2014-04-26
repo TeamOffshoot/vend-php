@@ -45,18 +45,12 @@ class VendAPI
     public $default_outlet = 'Main Outlet';
 
     /**
-     * @param string $url          url of your shop eg https://shopname.vendhq.com
-     * @param string $username     username for api
-     * @param string $password     password for api
-     * @param string $requestClass used for testing
+     * @param \VendAPI\VendRequest $request
      */
-    public function __construct($url, $username, $password, $requestClass = '\VendAPI\VendRequest')
+    public function __construct(\VendAPI\VendRequest $request)
     {
-        // trim trailing slash for niceness
-        $this->url = rtrim($url, '/');
-
-        $this->requestr = new $requestClass($url, $username, $password);
-
+        $this->requestr = $request;
+        $this->url = $request->getUrl();
     }
     /**
      * turn on debuging for this class and requester class
