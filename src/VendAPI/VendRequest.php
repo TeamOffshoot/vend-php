@@ -67,6 +67,10 @@ class VendRequest
             $this->verifyPeer = $options['CURLOPT_SSL_VERIFYPEER'];
         }
 
+        if (array_key_exists('CURLOPT_CAINFO', $options)) {
+            $this->certificatePath = $options['CURLOPT_CAINFO'];
+        }
+
         // setup default curl options
         $options = array(
             CURLOPT_RETURNTRANSFER => 1,

@@ -2,7 +2,8 @@
 
 include 'src/VendAPI/VendAPI.php';
 
-$vend = new VendAPI\VendAPI('https://shopname.vendhq.com','username','password');
+$request = new VendAPI\VendRequest('https://shopname.vendhq.com','username','password');
+$vend = new VendAPI\VendAPI($request);
 
 $products = $vend->getProducts();
 
