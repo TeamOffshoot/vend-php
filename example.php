@@ -2,7 +2,15 @@
 
 include 'src/VendAPI/VendAPI.php';
 
-$request = new VendAPI\VendRequest('https://shopname.vendhq.com','username','password');
+$request = new VendAPI\VendRequest(
+  'https://shopname.vendhq.com',
+  'username',
+  'password',
+  array(
+    'CURLOPT_CAINFO' => 'path/to/your/cacert.pem'
+  )
+);
+
 $vend = new VendAPI\VendAPI($request);
 
 $products = $vend->getProducts();
