@@ -78,9 +78,9 @@ class VendRequest
             CURLOPT_FAILONERROR => 1,
             CURLOPT_HTTPAUTH => CURLAUTH_ANY,
             CURLOPT_USERPWD => $username.':'.$password,
-            CURLOPT_HTTPHEADER,array('Accept: application/json','Content-Type: application/json'),
+            CURLOPT_HTTPHEADER, array('Accept: application/json','Content-Type: application/json'),
             CURLOPT_HEADER => 1,
-            CURLOPT_USERAGENT => 'brucealdridge/VendAPI',
+            CURLOPT_USERAGENT => 'TeamOffshoot/VendAPI',
             CURLOPT_SSL_VERIFYHOST => $this->verifyHost
         );
 
