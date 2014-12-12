@@ -53,4 +53,44 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testExchangingToken()
+    {
+
+        $storeName = 'store-name';
+        $clientId = 'XXX1234567890';
+        $clientSecret = 'ABC123XYZ';
+        $temporaryToken = 'TEMP_TOKEN';
+        $permanentAccessToken = 'ACCESS_TOKEN';
+        $redirectUri = 'http://example.com/myapp';
+
+        $accessUri = "https://{$storeName}.vendhq.com/api/1.0/token";
+        $params = array(
+            'code' => $temporaryToken,
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => $redirectUri
+        );
+
+        $response = '{"access_token": "' . $permanentAccessToken . '"}';
+
+        $this->httpClient->expects($this->once())
+                         ->method('post')
+                         ->with($accessUri, $params)
+                         ->will($this->returnValue($response));
+
+        $token = $this->authenticate->forStoreName($storeName)
+                                    ->usingClientId($clientId)
+                                    ->usingClientSecret($clientSecret)
+                                    ->andReturningTo($redirectUri)
+                                    ->toExchange($temporaryToken);
+
+        $this->assertEquals(
+            $accessUri, $this->authenticate->getAccessUri()
+        );
+
+        $this->assertEquals($permanentAccessToken, $token);
+
+    }
+
 }
