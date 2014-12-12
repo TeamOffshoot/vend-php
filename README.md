@@ -83,6 +83,29 @@ you authenticate with the Vend API first
         ->andReturningTo('http://wherever.you/like')
         ->initiateLogin();
 
+This will redirect your user to a Vend login screen where they will need
+to authenticate with their Vend credentials. After doing that, Vend will
+perform a GET request to your redirect URI, that will look like:
+
+    GET http://wherever.you/like?code=TEMP_TOKEN&domain_prefix=YOUR_STORE_NAME
+
+Your application will need to capture the `code` query param from the request
+and use that to get the permanent access token from Vend
+
+    $client = new Vend\Api\Client($httpClient);
+    $client->setClientSecret('ABC123XYZ'); // get this from your Vend Account
+
+    // validate the Vend Request
+    if ($client->isValidRequest($_GET)) {
+
+        // exchange the token
+        $permanentAccessToken = $authenticate->forStoreName('mycoolshop')
+            ->usingClientId('XXX1234567890')
+            ->usingClientSecret('ABC123XYZ')
+            ->toExchange($_GET['code']);
+
+    }
+
 ### Interacting with the Vend API
 
 ```php
