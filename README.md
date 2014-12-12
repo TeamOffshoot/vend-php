@@ -68,6 +68,22 @@ You will be able to find the cacert.pem file in `vendor/haxx-se/curl/cacert.pem`
 
 ## Usage
 
+### Authentication
+
+If you do not already have a Vend API Permanent Access Token, you will need
+you authenticate with the Vend API first
+
+    $pathToCertificateFile = 'vendor/haxx-se/curl/cacert.pem';
+    $httpClient = new \Offshoot\HttpClient\CurlHttpClient($pathToCertificateFile);
+    $redirector = new \Offshoot\Redirector\HeaderRedirector();
+    $authenticate = new \Vend\Api\AuthenticationGateway($httpClient, $redirector);
+
+    $authenticate->forStoreName('mycoolstore')
+        ->usingClientId('XXX1234567890') // get this from your Vend Account
+        ->andReturningTo('http://wherever.you/like')
+        ->initiateLogin();
+
+### Interacting with the Vend API
 
 ```php
 require 'vendapi.php';
