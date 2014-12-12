@@ -1,2 +1,4 @@
 vendor/
+tests/phpunit.xml
 composer.lock
+
