@@ -1,7 +1,7 @@
 <?php
 
 /**
- * VendAPI 
+ * VendAPI
  *
  * An api for communicating with vend pos software - http://www.vendhq.com
  *
@@ -14,7 +14,7 @@
  * @link       https://github.com/brucealdridge/vendapi
  */
 
-namespace VendAPI;
+namespace Vend;
 
 class Exception extends \Exception
 {
