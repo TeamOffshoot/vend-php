@@ -88,3 +88,25 @@ eg:
 ```php
 $vend->debug(true);
 ```
+
+## Contributing
+
+Contributions are welcome. Just fork the repository and send a pull request.
+Please be sure to include test coverage with your pull request. You can learn
+more about Pull Requests
+[here](https://help.github.com/articles/creating-a-pull-request)
+
+In order to run the test suite, ensure that the development dependencies have
+been installed via composer. Then from your command line, simple run:
+
+    vendor/bin/phpunit --bootstrap tests/bootstrap.php tests/
+
+## License
+
+This library is released under the
+[GPL 3.0 License](https://github.com/TeamOffshoot/vend-php/blob/master/LICENSE)
+
+## Acknowledgements
+
+Thanks to [Bruce Aldridge](https://github.com/brucealdridge/VendAPI) for
+his development of the initial code base.
