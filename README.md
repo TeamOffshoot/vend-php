@@ -1,13 +1,73 @@
-Vend API class
-==============
+# vend-php
 
-This is a basic PHP class for using the API for Vend (vendhq.com). It
-is at a really basic state but it does exactly what I need at the
-moment. Feel free to add any issues/bugs and send me any pull
-requests.
+A simple [Vend API](https://developers.vendhq.com/) client in PHP.
 
+The canoncial repository for this stream of development is
+[https://github.com/TeamOffshoot/vend-php](https://github.com/TeamOffshoot/vend-php)
 
-### Basic Usage
+This API Client is still in a pre-1.0 state, so you can expect:
+* some bugs (feel free to submit a pull request with bug fixes and test coverage)
+* possibly some breaking API changes between v0.9 and v1.0
+
+## Requirements
+
+* PHP 5.3 (or higher)
+* ext-curl, ext-json
+* offshoot/http
+
+## Development Requirements
+
+* phpunit/phpunit 3.7
+
+## Getting Started
+
+Install vend-php via [Composer](http://getcomposer.org/)
+
+Create a `composer.json` file if you don't already have one in your projects
+root directory and require vend-php:
+
+    {
+      "require": {
+        "offshoot/vend-php": "0.9.x"
+      }
+    }
+
+To learn more about Composer, including the complete installation process,
+visit http://getcomposer.org/
+
+### Using cURL
+
+If you're using a cURL based HttpClient like the `CurlHttpClient`, you will want
+to include the cacert.pem file that can be found at
+[http://curl.haxx.se/docs/caextract.html](http://curl.haxx.se/docs/caextract.html)
+
+You can add this as a dependency in your composer file. Your `composer.json`
+might look something like this:
+
+    {
+      "require": {
+        "offshoot/vend-php": "0.9.x",
+        "haxx-se/curl": "1.0.0"
+      },
+      "repositories": [
+        {
+          "type": "package",
+          "package": {
+            "name": "haxx-se/curl",
+            "version": "1.0.0",
+            "dist": {
+              "url": "http://curl.haxx.se/ca/cacert.pem",
+              "type": "file"
+            }
+          }
+        }
+      ]
+    }
+
+You will be able to find the cacert.pem file in `vendor/haxx-se/curl/cacert.pem`
+
+## Usage
+
 
 ```php
 require 'vendapi.php';
