@@ -96,8 +96,8 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
             $accessUri, $this->authenticate->getAccessUri()
         );
 
-        $this->assertEquals($permanentAccessToken, $object['access_token']);
-        $this->assertEquals($permanentAccessToken, $object['refresh_token']);
+        $this->assertEquals($permanentAccessToken, $object->access_token);
+        $this->assertEquals($refreshToken, $object->refresh_token);
 
     }
 
