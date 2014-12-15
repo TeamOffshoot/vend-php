@@ -14,16 +14,20 @@
  * @link       https://github.com/brucealdridge/vendapi
  */
 
-namespace VendAPI;
+namespace Vend\Api;
 
-abstract class VendObject
+class Response
 {
+
     protected $vend;
+
     protected $vendObjectProperties = array();
+
     protected $initialObjectProperties = array();
 
     public function __construct($data = null, &$v = null)
     {
+
         $this->vend = $v;
         if ($data) {
             foreach ($data as $key => $value) {
@@ -31,14 +35,17 @@ abstract class VendObject
             }
             $this->initialObjectProperties = $this->vendObjectProperties;
         }
+
     }
 
     public function __set($key, $value)
     {
         $this->vendObjectProperties[$key] = $value;
     }
+
     public function __get($key)
     {
+
         if (array_key_exists($key, $this->vendObjectProperties)) {
             return $this->vendObjectProperties[$key];
         }
@@ -55,14 +62,17 @@ abstract class VendObject
     {
         unset($this->vendObjectProperties[$key]);
     }
+
     public function clear()
     {
         $this->vendObjectProperties = array();
     }
+
     public function toArray()
     {
         return $this->vendObjectProperties;
     }
+
     /**
      * will return an array of all changed properties and the id
      * return array
@@ -78,4 +88,5 @@ abstract class VendObject
         }
         return $output;
     }
+
 }
