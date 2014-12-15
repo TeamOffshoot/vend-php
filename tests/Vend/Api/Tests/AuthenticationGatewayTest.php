@@ -72,12 +72,18 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
             'redirect_uri' => $redirectUri
         );
 
-        $response = '{"access_token": "' . $permanentAccessToken . '"}';
+        $response = array(
+            'access_token' => $permanentAccessToken,
+            'token_type' => 'Bearer',
+            'expires' => 1387145621,
+            'expires_in' => 604800,
+            'refresh_token' => "J3F62YPIQdfJjJia1xJuaHp7NoQYtm9y0WadNBTh"
+        );
 
         $this->httpClient->expects($this->once())
                          ->method('post')
                          ->with($accessUri, $params)
-                         ->will($this->returnValue($response));
+                         ->will($this->returnValue(json_encode($response)));
 
         $token = $this->authenticate->forStoreName($storeName)
                                     ->usingClientId($clientId)
