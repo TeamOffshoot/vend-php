@@ -91,6 +91,56 @@ class AuthenticationGateway
     }
 
     /**
+     * a simple DSL on top of setting the client secret
+     * @param string $clientSecret
+     * @return AuthenticationGateway
+     */
+    public function usingClientSecret($clientSecret)
+    {
+        $this->setClientSecret($clientSecret);
+        return $this;
+    }
+
+    /**
+     * exchange the temporary token for a permanent access token
+     * @param string $temporaryToken
+     * @return string
+     */
+    public function toExchange($temporaryToken)
+    {
+
+        if (!$this->canAuthenticateUser($temporaryToken)) {
+            throw new \RuntimeException(
+                'Cannot authenticate user, dependencies are missing'
+            );
+        }
+
+        if (!$this->codeIsValid($temporaryToken)) {
+            throw new \InvalidArgumentException('Vend code is invalid');
+        }
+
+        $request = array(
+            'client_id' => $this->getClientId(),
+            'client_secret' => $this->getClientSecret(),
+            'code' => $temporaryToken,
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => ''
+        );
+
+        $response = json_decode($this->httpClient->post(
+            $this->getAccessUri(),
+            $request
+        ));
+
+        if (isset($response->error)) {
+            throw new \RuntimeException($response->error);
+        }
+
+        return isset($response->access_token) ? $response->access_token : null;
+
+    }
+
+    /**
      * build the uri that users are forwarded to for authentication
      * @return string
      */
@@ -113,6 +163,16 @@ class AuthenticationGateway
     }
 
     /**
+     * build the Vend access uri that users are forwarded to for exchanging
+     * the temporary token with the permanent access token
+     * @return string
+     */
+    public function getAccessUri()
+    {
+        return sprintf(self::ACCESS_URI, $this->getStoreName());
+    }
+
+    /**
      * assert that it is possible to proceed with initiating the login
      * @return boolean
      */
@@ -130,6 +190,18 @@ class AuthenticationGateway
     }
 
     /**
+     * assert that it is possible to proceed with authenticating the user
+     * @param string $temporaryToken
+     * @return boolean
+     */
+    protected function canAuthenticateUser($temporaryToken)
+    {
+        return $this->getClientId()
+            && $this->getClientSecret()
+            && $temporaryToken;
+    }
+
+    /**
      * assert that it is possible to build the authentication uri
      * @return boolean
      */
@@ -137,6 +209,16 @@ class AuthenticationGateway
     {
         return $this->getClientId()
             && $this->getStoreName();
+    }
+
+    /**
+     * assert that the shopify code is valid for use
+     * @param string $code
+     * @return boolean
+     */
+    protected function codeIsValid($code)
+    {
+        return !is_null($code);
     }
 
     /**
@@ -173,6 +255,24 @@ class AuthenticationGateway
     protected function getClientId()
     {
         return $this->clientId;
+    }
+
+    /**
+     * set the client secret
+     * @param string $clientSecret
+     */
+    protected function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * get the client secret
+     * @return string
+     */
+    protected function getClientSecret()
+    {
+        return $this->clientSecret;
     }
 
     /**
