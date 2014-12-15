@@ -124,7 +124,7 @@ class AuthenticationGateway
             'client_secret' => $this->getClientSecret(),
             'code' => $temporaryToken,
             'grant_type' => 'authorization_code',
-            'redirect_uri' => ''
+            'redirect_uri' => $this->getRedirectUri()
         );
 
         $response = json_decode($this->httpClient->post(
