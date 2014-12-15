@@ -61,6 +61,7 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
         $clientSecret = 'ABC123XYZ';
         $temporaryToken = 'TEMP_TOKEN';
         $permanentAccessToken = 'ACCESS_TOKEN';
+        $refreshToken = 'REFRESH_TOKEN';
         $redirectUri = 'http://example.com/myapp';
 
         $accessUri = "https://{$storeName}.vendhq.com/api/1.0/token";
@@ -77,7 +78,7 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
             'token_type' => 'Bearer',
             'expires' => 1387145621,
             'expires_in' => 604800,
-            'refresh_token' => "J3F62YPIQdfJjJia1xJuaHp7NoQYtm9y0WadNBTh"
+            'refresh_token' => $refreshToken
         );
 
         $this->httpClient->expects($this->once())
@@ -85,7 +86,7 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
                          ->with($accessUri, $params)
                          ->will($this->returnValue(json_encode($response)));
 
-        $token = $this->authenticate->forStoreName($storeName)
+        $object = $this->authenticate->forStoreName($storeName)
                                     ->usingClientId($clientId)
                                     ->usingClientSecret($clientSecret)
                                     ->andReturningTo($redirectUri)
@@ -95,7 +96,8 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
             $accessUri, $this->authenticate->getAccessUri()
         );
 
-        $this->assertEquals($permanentAccessToken, $token);
+        $this->assertEquals($permanentAccessToken, $object['access_token']);
+        $this->assertEquals($permanentAccessToken, $object['refresh_token']);
 
     }
 
