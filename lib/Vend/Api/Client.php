@@ -109,6 +109,9 @@ class Client
             "Bearer {$this->getAccessToken()}"
         );
 
+        $this->getHttpClient()->addHeader('Content-Type', 'application/json');
+        $this->getHttpClient()->addHeader('Accept', 'application/json');
+
         switch ($method) {
             case HttpClient::GET:
                 $response = $this->getHttpClient()->get($uri, $params);
