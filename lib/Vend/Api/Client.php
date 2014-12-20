@@ -74,15 +74,6 @@ class Client
     }
 
     /**
-     * get the store name
-     * @return string
-     */
-    protected function getStoreName()
-    {
-        return $this->storeName;
-    }
-
-    /**
      * get the base URI for the api
      * @return string
      */
