@@ -89,6 +89,17 @@ class Client
     }
 
     /**
+     * returns true if the supplied request params are valid
+     * @return boolean
+     */
+    public function isValidRequest(array $params)
+    {
+        // at this point, we don't have the required logic for validating
+        // a vend request
+        return true;
+    }
+
+    /**
      * get the base URI for the api
      * @return string
      */
