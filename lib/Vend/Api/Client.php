@@ -19,6 +19,12 @@ class Client
     protected $accessToken;
 
     /**
+     * the shared secret created by Vend
+     * @var string
+     */
+    protected $sharedSecret;
+
+    /**
      * the http client used to make requests to the Vend api
      * @var HttpClient
      */
@@ -49,6 +55,15 @@ class Client
     public function setAccessToken($token)
     {
         $this->accessToken = $token;
+    }
+
+    /**
+     * set the shared secret
+     * @param string
+     */
+    public function setClientSecret($secret)
+    {
+        $this->sharedSecret = $secret;
     }
 
     /**
@@ -146,6 +161,15 @@ class Client
     protected function getAccessToken()
     {
         return $this->accessToken;
+    }
+
+    /**
+     * get the shared secret
+     * @return string
+     */
+    protected function getClientSecret()
+    {
+        return $this->sharedSecret;
     }
 
     /**
