@@ -133,7 +133,7 @@ class AuthenticationGateway
         ));
 
         if (isset($response->error)) {
-            throw new \RuntimeException($response->error);
+            throw new \RuntimeException($response->error_description);
         }
 
         return $response;
