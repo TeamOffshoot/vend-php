@@ -150,9 +150,11 @@ class Client
 
         if (isset($response->errors)) {
             throw new \RuntimeException($response->errors);
+        } elseif (isset($response->error)) {
+            throw new \RuntimeException($response->error);
         }
 
-        return $response;
+        return new Response($response);
 
     }
 
