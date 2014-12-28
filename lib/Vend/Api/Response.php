@@ -19,16 +19,16 @@ namespace Vend\Api;
 class Response
 {
 
-    protected $vend;
+    protected $vendObjectProperties;
 
-    protected $vendObjectProperties = array();
+    protected $initialObjectProperties;
 
-    protected $initialObjectProperties = array();
-
-    public function __construct($data = null, &$v = null)
+    public function __construct($data = null)
     {
 
-        $this->vend = $v;
+        $this->vendObjectProperties = array();
+        $this->initialObjectProperties = array();
+
         if ($data) {
             foreach ($data as $key => $value) {
                 $this->vendObjectProperties[$key] = $value;
