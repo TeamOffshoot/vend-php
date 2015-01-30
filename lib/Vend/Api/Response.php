@@ -23,15 +23,16 @@ class Response
 
     protected $initialObjectProperties;
 
-    public function __construct($data = null)
+    public function __construct($rawdata = null)
     {
 
         $this->vendObjectProperties = array();
         $this->initialObjectProperties = array();
 
-        if ($data) {
+        if ($rawdata) {
+            $data = current((array)$rawdata);
             foreach ($data as $key => $value) {
-                $this->vendObjectProperties[$key] = $value;
+                $this->vendObjectProperties[(string)$key] = $value;
             }
             $this->initialObjectProperties = $this->vendObjectProperties;
         }
