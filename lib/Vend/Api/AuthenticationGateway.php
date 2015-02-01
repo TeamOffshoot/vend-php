@@ -102,7 +102,7 @@ class AuthenticationGateway
     }
 
     /**
-     * exchange the temporary token for a permanent access token
+     * exchange the temporary token for an access token
      * @param string $temporaryToken
      * @return string
      */
@@ -127,16 +127,31 @@ class AuthenticationGateway
             'redirect_uri' => $this->getRedirectUri()
         );
 
-        $response = json_decode($this->httpClient->post(
-            $this->getAccessUri(),
-            $request
-        ));
+        return $this->requestAccess($request);
 
-        if (isset($response->error)) {
-            throw new \RuntimeException($response->error_description);
+    }
+
+
+    /**
+     * refresh access to the api using a refresh token
+     * @param string $refreshToken
+     * @return string
+     */
+    public function toRefreshAccess($refreshToken)
+    {
+
+        if (!$this->codeIsValid($refreshToken)) {
+            throw new \InvalidArgumentException('Vend refresh token is invalid');
         }
 
-        return $response;
+        $request = array(
+            'client_id' => $this->getClientId(),
+            'client_secret' => $this->getClientSecret(),
+            'refresh_token' => $refreshToken,
+            'grant_type' => 'refresh_token'
+        );
+
+        return $this->requestAccess($request);
 
     }
 
@@ -170,6 +185,27 @@ class AuthenticationGateway
     public function getAccessUri()
     {
         return sprintf(self::ACCESS_URI, $this->getStoreName());
+    }
+
+    /**
+     * make a post to the the access uri
+     * @param array $request
+     * @return string
+     */
+    protected function requestAccess($request)
+    {
+
+        $response = json_decode($this->httpClient->post(
+            $this->getAccessUri(),
+            $request
+        ));
+
+        if (isset($response->error)) {
+            throw new \RuntimeException($response->error_description);
+        }
+
+        return $response;
+
     }
 
     /**
