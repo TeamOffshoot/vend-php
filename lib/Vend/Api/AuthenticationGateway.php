@@ -131,7 +131,6 @@ class AuthenticationGateway
 
     }
 
-
     /**
      * refresh access to the api using a refresh token
      * @param string $refreshToken
@@ -139,6 +138,12 @@ class AuthenticationGateway
      */
     public function toRefreshAccess($refreshToken)
     {
+
+        if (!$this->canRefreshAccess($refreshToken)) {
+            throw new \RuntimeException(
+                'Cannot refresh access, dependencies are missing'
+            );
+        }
 
         if (!$this->codeIsValid($refreshToken)) {
             throw new \InvalidArgumentException('Vend refresh token is invalid');
@@ -227,14 +232,24 @@ class AuthenticationGateway
 
     /**
      * assert that it is possible to proceed with authenticating the user
-     * @param string $temporaryToken
+     * @param string $token
      * @return boolean
      */
-    protected function canAuthenticateUser($temporaryToken)
+    protected function canAuthenticateUser($token)
     {
         return $this->getClientId()
             && $this->getClientSecret()
             && $temporaryToken;
+    }
+
+    /**
+     * assert that it is possible to proceed with refreshing access
+     * @param string $token
+     * @return boolean
+     */
+    protected function canRefreshAccess($token)
+    {
+        return $this->canAuthenticateUser($token);
     }
 
     /**
