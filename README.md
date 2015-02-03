@@ -5,10 +5,6 @@ A simple [Vend API](https://developers.vendhq.com/) client in PHP.
 The canoncial repository for this stream of development is
 [https://github.com/TeamOffshoot/vend-php](https://github.com/TeamOffshoot/vend-php)
 
-This API Client is still in a pre-1.0 state, so you can expect:
-* some bugs (feel free to submit a pull request with bug fixes and test coverage)
-* possibly some breaking API changes between v0.9 and v1.0
-
 ## Requirements
 
 * PHP 5.3 (or higher)
@@ -28,7 +24,7 @@ root directory and require vend-php:
 
     {
       "require": {
-        "offshoot/vend-php": "0.9.x"
+        "offshoot/vend-php": "~1.*"
       }
     }
 
@@ -46,7 +42,7 @@ might look something like this:
 
     {
       "require": {
-        "offshoot/vend-php": "0.9.x",
+        "offshoot/vend-php": "~1.*",
         "haxx-se/curl": "1.0.0"
       },
       "repositories": [
@@ -70,12 +66,15 @@ You will be able to find the cacert.pem file in `vendor/haxx-se/curl/cacert.pem`
 
 ### Authentication
 
+#### Getting an Access Token
+
 If you do not already have a Vend API Permanent Access Token, you will need
 you authenticate with the Vend API first
 
     $pathToCertificateFile = 'vendor/haxx-se/curl/cacert.pem';
     $httpClient = new \Offshoot\HttpClient\CurlHttpClient($pathToCertificateFile);
     $redirector = new \Offshoot\Redirector\HeaderRedirector();
+
     $authenticate = new \Vend\Api\AuthenticationGateway($httpClient, $redirector);
 
     $authenticate->forStoreName('mycoolstore')
@@ -90,103 +89,33 @@ perform a GET request to your redirect URI, that will look like:
     GET http://wherever.you/like?code=TEMP_TOKEN&domain_prefix=YOUR_STORE_NAME
 
 Your application will need to capture the `code` query param from the request
-and use that to get the permanent access token from Vend
-
-    $client = new Vend\Api\Client($httpClient);
-    $client->setClientSecret('ABC123XYZ'); // get this from your Vend Account
+and use that to get the access token from Vend
 
     // validate the Vend Request
     if ($client->isValidRequest($_GET)) {
 
         // exchange the token
-        $permanentAccessToken = $authenticate->forStoreName('mycoolshop')
-            ->usingClientId('XXX1234567890')
-            ->usingClientSecret('ABC123XYZ')
+        $accessToken = $authenticate->forStoreName('mycoolstore')
+            ->usingClientId('XXX1234567890') // get this from your Vend Account
+            ->usingClientSecret('ABC123XYZ') // get this from your Vend Account
+            ->andReturningTo('http://wherever.you/like')
             ->toExchange($_GET['code']);
 
     }
 
+#### Refreshing an Access Token
+
+TBD
+
 ### Interacting with the Vend API
 
-```php
-require 'vendapi.php';
+#### Set up the API Client
 
-$request = new VendAPI\VendRequest(
-  'https://shopname.vendhq.com',
-  'username',
-  'password',
-  array(
-    'CURLOPT_CAINFO' => 'path/to/your/cacert.pem'
-  )
-);
+    $vend = new \Vend\Api\Client($httpClient);
+    $vend->setStoreName('mycoolstore');
+    $vend->setAccessToken($accessToken);
 
-$vend = new VendAPI\VendAPI($request);
-$products = $vend->getProducts();
-```
 
-*NB* this will only grab the first 20 or so results. To grab all results set `$vend->automatic_depage` to `true`
-
-```php
-$vend->automatic_depage = true;
-$products = $vend->getProducts();
-```
-### Add a Product
-
-```php
-$donut = new \VendAPI\VendProduct(null, $vend);
-$donut->handle = 'donut01';
-$donut->sku = '343434343';
-$donut->retail_price = 2.99;
-$donut->name = 'Donut w/ Sprinkles';
-$donut->save();
-echo 'Donut product id is '.$donut->id;
-```
-
-### Add a Sale
-
-```php
-$sale = new \VendAPI\VendSale(null, $vend);
-$sale->register_id = $register_id;
-$sale->customer_id = $customer_id;
-$sale->status = 'OPEN';
-$products = array();
-foreach ($items as $item) {
-    $products[] = array(
-        'product_id' => $item->product_id,
-        'quantity' => $item->quantity,
-        'price' => $item->price
-    );
-}
-$sale->register_sale_products = $products;
-$sale->save();
-
-echo "Created new order with id: ".$sale->id;
-```
-
-### Other cool stuff
-
-```php
-$vend->getProducts(array('active' => '1', 'since' => '2012-09-15 20:55:00'));
-```
-*NB* Check the vend api docs for supported search fields. If a search field isn't supported all results will be returned rather than the zero I was expecting
-
-```php
-$coffee = $vend->getProduct('42c2ccc4-fbf4-11e1-b195-4040782fde00');
-echo $coffee->name; // outputs "Hot Coffee"
-if ($product->getInventory() == 0) {
-  $coffee->setInventory(10);
-  $coffee->name = 'Iced Coffee';
-  $coffee->save();
-}
-```
-
-### Debugging
-
-To debug make a call to the ```debug()``` function.
-eg:
-```php
-$vend->debug(true);
-```
 
 ## Contributing
 
