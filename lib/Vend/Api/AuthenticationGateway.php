@@ -239,7 +239,7 @@ class AuthenticationGateway
     {
         return $this->getClientId()
             && $this->getClientSecret()
-            && $temporaryToken;
+            && $token;
     }
 
     /**
