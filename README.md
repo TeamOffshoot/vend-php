@@ -24,7 +24,7 @@ root directory and require vend-php:
 
     {
       "require": {
-        "offshoot/vend-php": "~1.*"
+        "offshoot/vend-php": "~1.0"
       }
     }
 
@@ -42,7 +42,7 @@ might look something like this:
 
     {
       "require": {
-        "offshoot/vend-php": "~1.*",
+        "offshoot/vend-php": "~1.0",
         "haxx-se/curl": "1.0.0"
       },
       "repositories": [
