@@ -206,7 +206,13 @@ class AuthenticationGateway
         ));
 
         if (isset($response->error)) {
-            throw new \RuntimeException($response->error_description);
+            $message = $response->error;
+
+            if (isset($response->error_description)) {
+                $message = $response->error_description;
+            }
+
+            throw new \RuntimeException($message);
         }
 
         return $response;
