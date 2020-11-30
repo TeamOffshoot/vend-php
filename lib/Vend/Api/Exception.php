@@ -14,7 +14,7 @@
  * @link       https://github.com/brucealdridge/vendapi
  */
 
-namespace Vend;
+namespace Vend\Api;
 
 class Exception extends \Exception
 {
